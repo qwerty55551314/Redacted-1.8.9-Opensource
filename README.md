@@ -1,81 +1,49 @@
-# Redacted Client
+# Redacted
 
-Minecraft 1.8.9 client base updated for LWJGL 3 with a small client event/module layer.
+A Minecraft 1.8.9 MCP client, tuned mainly for Polar-AC and Hypixel. Development has stopped, so the full source is being released as-is.
 
-## Requirements
+The menu shows the client as **Redacted**; the tree is at the version it was left at.
 
-- IntelliJ IDEA
-- JDK 21 installed and selected as the Gradle JVM
-- Minecraft assets from a local Minecraft installation
+## What's inside
 
-The Gradle build uses a Java 21 toolchain while compiling Java 8 bytecode for the client sources.
+- Full module suite: combat, movement, render, world, utility, plus the developer modules.
+- Click GUIs (dropdown and the custom Redacted one), HUD editor, themes, notifications.
+- Alt manager: cracked, Microsoft (device code or refresh token) and Altening accounts, with per-alt proxy support.
+- ReplayMod-based replay and rewind support, wired into the main menu.
+- Baritone pathing included, with the client's own bridge and auto-bridge controller on top.
+- Anticheat-aware modules. Reach, WTap, BedAura and the rest have Polar/Grim/Vulcan/Intave/AGC paths, and there's a Hypixel bed-break mode.
+- Developer tooling: packet logger with its own GUI, debug packet dumps on the debug classpath, and a built-in MCP (Model Context Protocol) bridge for AI agents. `.mcp on` starts it on port 25585, `.mcp off` stops it.
+- The 1.8.9 client runs on LWJGL 3, not the old LWJGL 2 stack.
 
-## IntelliJ Setup
+## Building
 
-1. Clone the repository.
-2. Open IntelliJ IDEA and select `File > Open`.
-3. Select the repository folder and open it as a Gradle project.
-4. When IntelliJ asks about Gradle settings, use:
-   - Gradle JVM: JDK 21
-   - Build and run using: Gradle
-   - Run tests using: Gradle
-5. Wait for Gradle sync to finish.
-6. Create the local run assets:
-
-   Windows PowerShell:
-
-   ```powershell
-   New-Item -ItemType Directory -Force run
-   Copy-Item -Recurse -Force "$env:APPDATA\.minecraft\assets" "run\assets"
-   ```
-
-   Windows cmd:
-
-   ```bat
-   mkdir run
-   xcopy /E /I "%APPDATA%\.minecraft\assets" "run\assets"
-   ```
-
-   Linux or macOS:
-
-   ```bash
-   mkdir -p run
-   cp -R ~/.minecraft/assets run/assets
-   ```
-
-7. In the Gradle tool window, run `Tasks > application > runClient`.
-
-## Command Line
-
-Build the client:
-
-```bash
-./gradlew build
-```
-
-Run the client:
+JDK 21 and the Gradle wrapper are all you need; the toolchain handles the rest.
 
 ```bash
 ./gradlew runClient
 ```
 
-Copy resolved LWJGL API and native jars to `build/lwjgl3-libraries`:
+If `run/assets` doesn't exist yet, point it at a normal 1.8.9 install once:
 
 ```bash
-./gradlew syncLwjglLibraries
+cp -R ~/.minecraft/assets run/assets
 ```
 
-On Windows cmd, use `gradlew.bat` instead of `./gradlew`.
+Standalone jar:
 
-## Repository Hygiene
+```bash
+./gradlew shadowJar        # build/libs/RedactedClient.jar
+```
 
-Generated files and local machine state are intentionally ignored:
+Debug build (packet dumper and extra diagnostics):
 
-- `.idea/`
-- `.gradle/`
-- `build/`
-- `out/`
-- `run/`
-- `.env*`
+```bash
+./gradlew debugRunClient
+```
 
-Do not commit Minecraft runtime saves, logs, copied assets, IDE workspace state, or local environment files.
+IntelliJ imports it as a Gradle project without any setup beyond picking the JDK.
+
+## Notes
+
+- Discontinued: no support and no updates planned.
+- Apache 2.0, see `LICENSE`.
