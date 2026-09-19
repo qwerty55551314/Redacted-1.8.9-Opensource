@@ -1,23 +1,66 @@
 # Redacted
 
-A Minecraft 1.8.9 MCP client, tuned mainly for Polar-AC and Hypixel. Development has stopped, so the full source is being released as-is.
+A Minecraft 1.8.9 client with an MCP (Model Context Protocol) bridge built in, aimed at Polar-AC and Hypixel. It's discontinued. The source is out as-is: no support, no updates, no promises.
 
-The menu shows the client as **Redacted**; the tree is at the version it was left at.
+## Modules
 
-## What's inside
+Combat: AimAssist, SilentAim, SilentAura, AutoClicker, AutoBlock, AutoThrow, BackTrack, BedAura (with a Hypixel mode), BowAimAssist, Criticals, FakeLag, NoHitDelay, Reach, TargetFilter, Team, Triggerbot, Velocity, WTap, AntiBot, AntiFireBall, AntiMiss.
 
-- Full module suite: combat, movement, render, world, utility, plus the developer modules.
-- Click GUIs (dropdown and the custom Redacted one), HUD editor, themes, notifications.
-- Alt manager: cracked, Microsoft (device code or refresh token) and Altening accounts, with per-alt proxy support.
-- ReplayMod-based replay and rewind support, wired into the main menu.
-- Baritone pathing included, with the client's own bridge and auto-bridge controller on top.
-- Anticheat-aware modules. Reach, WTap, BedAura and the rest have Polar/Grim/Vulcan/Intave/AGC paths, and there's a Hypixel bed-break mode.
-- Developer tooling: packet logger with its own GUI, debug packet dumps on the debug classpath, and a built-in MCP (Model Context Protocol) bridge for AI agents. `.mcp on` starts it on port 25585, `.mcp off` stops it.
-- The 1.8.9 client runs on LWJGL 3, not the old LWJGL 2 stack.
+Movement: Sprint, NoSlow, NoFall, NoJumpDelay, KeepSprint, InventoryMove, BridgeAssist.
+
+Render: EntityESP (ESP, tracers, nametags, target HUD), BlockESP (beds, chests, item counts, place effect), Crosshair, FullBright, Freecam, FreeLook, Mirror, Notifications, SuperheroFX, TNTTimer, Trajectories, Tweaks, ClickGUI, EntityCulling, ParticleCulling.
+
+World: Scaffold, BedProtection, ChestStealer, Clutch, FastPlace, AutoPearl, Baritone.
+
+Utility: AutoHeal, AutoTool, InvManager, AnticheatDetector, FlagDetector, MiddleClickFriend, ClientSpoof.
+
+Cosmetics: Capes, Hats, Wings, Particles, HitSounds.
+
+Exploit: Disabler.
+
+Developer: PacketLogger, with its own packet log GUI.
+
+## Anticheat work
+
+Reach gates on Grim, Polar and Vulcan separately instead of sharing one number. WTap is tuned around Polar-class reaction offsets. BedAura has a Hypixel adjacent-then-bed break mode. AnticheatDetector fingerprints Polar, Intave and AGC by transaction timing and windowId patterns, and FlagDetector watches setbacks, velocity and transactions live.
+
+## GUIs
+
+Three click GUI styles: Dropdown, Exhibition and Redacted. Opens with RightShift. There's also a drag-and-drop HUD editor (positions survive resizes), a theme manager, a config manager, an alt manager, a Bed Wars team manager and the packet log viewer.
+
+## Alt manager
+
+Cracked, Microsoft (device code flow and refresh tokens) and Altening accounts. Per-alt proxy support, a history of every session, and auto login of the last used account on startup.
+
+## Replays
+
+ReplayMod is built in. Recording, replay and rewind work, and the viewer opens from the main menu.
+
+## Baritone
+
+The full Baritone pathing source ships with the client, plus a bridge that routes Baritone's rotations through the client's silent aim and an auto bridge controller for bridging.
+
+## Commands
+
+Prefix is `.`:
+
+`.help`, `.toggle <module>`, `.config`, `.theme`, `.mcp`, `.packetlog`, `.anticheat`, `.reset`, `.settimer`.
+
+## MCP bridge
+
+`.mcp on` starts it on port 25585, `.mcp off` stops it and `.mcp status` shows what's running. It binds to 127.0.0.1 and exposes modules, configs, client info, baritone, world, player, containers, render, chat and debug tools. It also starts with the client by default; flip `AUTO_START_MCP` in `DebugSystem` if you don't want that.
+
+## Debug
+
+`./gradlew debugRunClient` puts the packet dumper on the classpath (set `DEBUG_PACKETS=true` to turn it on). The rest of the debug logging lives in `DebugSystem`: per-category flags, one file per category under `logs/debug-<category>.log`.
+
+## Under the hood
+
+LWJGL 3 instead of the old 1.8.9 LWJGL 2 stack, a Celeritas/Sodium-style chunk renderer, and the whole Minecraft 1.8.9 source tree in one project so everything builds together.
 
 ## Building
 
-JDK 21 and the Gradle wrapper are all you need; the toolchain handles the rest.
+JDK 21 is all you need; the Gradle toolchain and wrapper handle the rest.
 
 ```bash
 ./gradlew runClient
@@ -35,15 +78,8 @@ Standalone jar:
 ./gradlew shadowJar        # build/libs/RedactedClient.jar
 ```
 
-Debug build (packet dumper and extra diagnostics):
+IntelliJ imports it as a Gradle project without setup beyond picking the JDK.
 
-```bash
-./gradlew debugRunClient
-```
+## License
 
-IntelliJ imports it as a Gradle project without any setup beyond picking the JDK.
-
-## Notes
-
-- Discontinued: no support and no updates planned.
-- Apache 2.0, see `LICENSE`.
+GPLv3. See `LICENSE`.
