@@ -1,0 +1,22 @@
+# Build output
+build/
+target/
+out/
+dist/
+.gradle/
+.idea/
+
+# Local run directory (game assets, logs, replays, saves)
+/run/
+
+# IDE / OS files
+*.iml
+.classpath
+.project
+.settings/
+.DS_Store
+
+# Local tooling
+.mcp.json
+
+# libs/ is intentionally checked in — it holds the local jars the build needs.

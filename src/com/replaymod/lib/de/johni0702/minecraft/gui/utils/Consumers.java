@@ -1,0 +1,12 @@
+package com.replaymod.lib.de.johni0702.minecraft.gui.utils;
+
+public class Consumers {
+   public static <U> Consumer<U> from(Runnable runnable) {
+      return new Consumer<U>() {
+         @Override
+         public void consume(U obj) {
+            runnable.run();
+         }
+      };
+   }
+}

@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven {
+            name = 'Minecraft Libraries'
+            url = uri('https://libraries.minecraft.net')
+        }
+    }
+}
+
+rootProject.name = 'minecraft-1.8.9-lwjgl3'
