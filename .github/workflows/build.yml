@@ -1,0 +1,42 @@
+name: Java CI with Gradle (Online Build)
+
+# 1. 同时监听 main 和 master 分支的推送与 PR
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch: # 允许你在 GitHub 页面手动点击按钮触发构建
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 2. 拉取存储库代码
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 3. 设置项目所需的 JDK 21 环境
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: 'gradle'
+
+    # 4. 给 Gradle 脚本赋予执行权限
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    # 5. 执行编译命令，生成独立的 Shadow Jar
+    - name: Build with Gradle (shadowJar)
+      run: ./gradlew shadowJar
+
+    # 6. 【重点】将构建产物上传，使其可以直接在网页端点击下载
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: RedactedClient-Jar # 下载时压缩包的名称
+        path: build/libs/*.jar   # 该项目编译生成的 jar 包存放路径
+        if-no-files-found: error # 如果没找到文件则报错提示
